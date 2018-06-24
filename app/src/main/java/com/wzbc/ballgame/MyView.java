@@ -126,8 +126,8 @@ public class MyView extends View {
                 }
             }
         }
-        paint.setColor(Color.WHITE);
-        canvas.drawOval(ball.x, ball.y, ball.d, ball.d, paint);  // 小球
+//        paint.setColor(Color.WHITE);
+//        canvas.drawOval(ball.x, ball.y, ball.d, ball.d, paint);  // 小球
         paint.setColor(Color.WHITE);
         canvas.drawRoundRect((nowX - startX) + initX - pane.w, pane.y - pane.h, (nowX - startX) + initX, pane.y, pane.r, pane.r, paint); // 挡板
 
