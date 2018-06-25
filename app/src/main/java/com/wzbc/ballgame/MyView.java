@@ -163,7 +163,7 @@ public class MyView extends View {
         else return false;
     }
     public boolean isGameOver(){
-        if (ball.y > 1400 ){
+        if (ball.y > 1550 ){
             return true;
         }
         return false;

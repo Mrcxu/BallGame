@@ -2,7 +2,7 @@ package com.wzbc.ballgame;
 
 public class Pane {
     int x = 100;
-    int y = 1400;
+    int y = 1550;
     int w = 200;
     int h = 30;
     int r = 5;

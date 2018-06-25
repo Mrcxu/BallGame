@@ -6,7 +6,7 @@ import java.util.Random;
 public class Ball{
     Random a = new Random();
     int x =500;
-    int y =1320;
+    int y =1200;
     int dx = 10;
     int dy = 10;
     int d = 10;
@@ -28,7 +28,7 @@ public class Ball{
         if(x < 0|| x > 1080 - 50 ){
             dx *= -1;
         }
-        if(y > 1400||y<0){
+        if(y > 1550||y<0){
             dy *= -1;
         }
 
