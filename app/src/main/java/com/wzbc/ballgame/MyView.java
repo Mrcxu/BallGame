@@ -15,7 +15,7 @@ import static com.wzbc.ballgame.Globals.SCREEN_WIDTH;
 
 
 public class MyView extends View {
-    //    Thread t = null;
+    //    Thread t = null;11
     int speed = 8;
     Ball ball;
     Pane pane;
