@@ -58,6 +58,12 @@ public class MainActivity extends AppCompatActivity {
                 myView.reset();
             }
         });
+        help.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
     }
 
     public void findView() {
