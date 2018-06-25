@@ -1,5 +1,6 @@
 package com.wzbc.ballgame;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -7,6 +8,11 @@ import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Toast;
+
+import static com.wzbc.ballgame.Globals.SCREEN_HEIGHT;
+import static com.wzbc.ballgame.Globals.SCREEN_WIDTH;
+
 
 public class MyView extends View {
     //    Thread t = null;
@@ -21,6 +27,7 @@ public class MyView extends View {
     private float nowX = 0;
     Boolean ismove = false;
     Boolean isup;
+    Boolean isPause = false;
 
     public MyView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
@@ -33,11 +40,16 @@ public class MyView extends View {
     public MyView(Context context, AttributeSet attrs) {
         super(context, attrs);
         ball = new Ball();
+        Activity activity;
+        if (context instanceof Activity) {
+            activity = (Activity) context;
+            Globals.init(activity);
+        }
         pane = new Pane();
         blocks = new Block[m][n];
         for (int i = 0; i < m; i++) {
             for (int j = 0; j < n; j++) {
-                blocks[i][j] = new Block(i, j);
+                blocks[i][j] = new Block(i, j, SCREEN_WIDTH, SCREEN_HEIGHT);
             }
         }
         this.setOnClickListener(new OnClickListener() {
@@ -56,6 +68,7 @@ public class MyView extends View {
                         startX = event.getX();
                         ismove = false;
                         isup = false;
+                        Toast.makeText(getContext(), "点下了！", Toast.LENGTH_LONG).show();
                         System.out.println("1:" + startX);
                         System.out.println("before:::::" + initX);
                         break;
@@ -64,8 +77,9 @@ public class MyView extends View {
                             break;
                         }
                         nowX = event.getX();
-                        if (Math.abs(nowX - startX) > 200) {
+                        if (Math.abs(nowX - startX) > 50) {
                             ismove = true;
+                            postInvalidate();
                         }
                         if (nowX - startX + initX > 1080) {
                             nowX = 1080 - initX + startX;
@@ -73,10 +87,10 @@ public class MyView extends View {
                             nowX = 200 - initX + startX;
                         }
                         System.out.println("nowX::::" + nowX);
-                        postInvalidate();
                         break;
                     case MotionEvent.ACTION_UP:
                         isup = true;
+                        Toast.makeText(getContext(), "抬起了！", Toast.LENGTH_LONG).show();
                         if (!ismove) {
                         } else {
                             initX = (nowX - startX) + initX;
@@ -86,6 +100,7 @@ public class MyView extends View {
                                 initX = 1080;
                             }
                         }
+
                         System.out.println("LastX:::::::::::" + nowX);
                         System.out.println("111X:::::::::::" + startX);
                         System.out.println("afterX:::::" + initX);
@@ -93,7 +108,7 @@ public class MyView extends View {
                     default:
                         break;
                 }
-                return false;
+                return true;
                 //返回true表明处理方法已经处理该事件
             }
         });
@@ -187,5 +202,8 @@ public class MyView extends View {
         return true;
     }
 
+    public void reset() {
+
+    }
 
 }
