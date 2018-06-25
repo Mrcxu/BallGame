@@ -20,7 +20,8 @@ public class MyView extends View {
     private float startX = 0;
     private float nowX = 0;
     Boolean ismove = false;
-    Boolean isup =false;
+    Boolean isup;
+
     public MyView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
@@ -46,51 +47,53 @@ public class MyView extends View {
             }
         });
 //        t = new Thread();
-
         this.setOnTouchListener(new OnTouchListener() {
+
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                switch (event.getAction()){
+                switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
                         startX = event.getX();
                         ismove = false;
-                        isup=false;
-                        System.out.println("1:"+startX);
+                        isup = false;
+                        System.out.println("1:" + startX);
                         System.out.println("before:::::" + initX);
                         break;
                     case MotionEvent.ACTION_MOVE:
-                        if (isup){
+                        if (isup) {
                             break;
                         }
-                        ismove = true;
                         nowX = event.getX();
-                        if (nowX-startX+initX>1080){
-                            nowX=1080-initX+startX;
-                        }else if(nowX-startX+initX<200){
-                            nowX=200-initX+startX;
+                        if (Math.abs(nowX - startX) > 200) {
+                            ismove = true;
                         }
-                        System.out.println("nowX::::"+nowX);
+                        if (nowX - startX + initX > 1080) {
+                            nowX = 1080 - initX + startX;
+                        } else if (nowX - startX + initX < 200) {
+                            nowX = 200 - initX + startX;
+                        }
+                        System.out.println("nowX::::" + nowX);
                         postInvalidate();
                         break;
                     case MotionEvent.ACTION_UP:
-                        isup=true;
-                        if (!ismove){
-                        }else{
+                        isup = true;
+                        if (!ismove) {
+                        } else {
                             initX = (nowX - startX) + initX;
-                            if (initX<200){
-                                initX=200;
-                            }else if(initX>1080){
-                                initX=1080;
+                            if (initX < 200) {
+                                initX = 200;
+                            } else if (initX > 1080) {
+                                initX = 1080;
                             }
                         }
-                        System.out.println("LastX:::::::::::"+nowX);
-                        System.out.println("111X:::::::::::"+startX);
+                        System.out.println("LastX:::::::::::" + nowX);
+                        System.out.println("111X:::::::::::" + startX);
                         System.out.println("afterX:::::" + initX);
                         break;
-                        default:
+                    default:
+                        break;
                 }
                 return false;
-
                 //返回true表明处理方法已经处理该事件
             }
         });
@@ -100,7 +103,7 @@ public class MyView extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         Paint paint = new Paint();
-        canvas.drawRect(0, 0, 1080, 2000,paint);   // 边界
+        canvas.drawRect(0, 0, 1080, 2000, paint);   // 边界
         paint.setColor(Color.RED);
         paint.setStyle(Paint.Style.FILL);
         for (int i = 0; i < m; i++) {
