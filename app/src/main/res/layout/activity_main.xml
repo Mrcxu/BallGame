@@ -64,7 +64,7 @@
             android:layout_alignParentEnd="true"
             android:layout_alignParentTop="true"
             android:layout_marginEnd="46dp"
-            android:background="@drawable/pause" />
+            android:background="@drawable/play" />
 
         <Button
             android:id="@+id/help"

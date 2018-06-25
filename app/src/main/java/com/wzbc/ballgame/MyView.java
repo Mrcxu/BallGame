@@ -16,7 +16,7 @@ import static com.wzbc.ballgame.Globals.SCREEN_WIDTH;
 
 public class MyView extends View {
     //    Thread t = null;11
-    int speed = 8;
+    int speed = 10;
     Ball ball;
     Pane pane;
     int m = 8;
@@ -27,7 +27,7 @@ public class MyView extends View {
     private float nowX = 0;
     Boolean ismove = false;
     Boolean isup;
-    Boolean isPause = false;
+    Boolean isPause = true;
 
     public MyView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
@@ -112,6 +112,7 @@ public class MyView extends View {
                 //返回true表明处理方法已经处理该事件
             }
         });
+        t.start();
     }
 
     @Override
@@ -144,8 +145,8 @@ public class MyView extends View {
                 }
             }
         }
-//        paint.setColor(Color.WHITE);
-//        canvas.drawOval(ball.x, ball.y, ball.d, ball.d, paint);  // 小球
+        paint.setColor(Color.WHITE);
+        canvas.drawOval(ball.x, ball.y, ball.x + 50, ball.y + 50, paint);  // 小球
         paint.setColor(Color.WHITE);
         canvas.drawRoundRect((nowX - startX) + initX - pane.w, pane.y - pane.h, (nowX - startX) + initX, pane.y, pane.r, pane.r, paint); // 挡板
 
@@ -161,49 +162,59 @@ public class MyView extends View {
         if (sum == 0) return true;
         else return false;
     }
+    public boolean isGameOver(){
+        if (ball.y > 1400 ){
+            return true;
+        }
+        return false;
+    }
 
-    Thread t = new Thread(
-    );
+    Thread t = new Thread(new Runnable() {
+        @Override
+        public void run() {
+            while (true) {
+                if (!isPause) {
+                    ball.move();
+                    postInvalidate();
+                } else {
+                }
+                try {
+                    t.sleep(speed);
+                } catch (InterruptedException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+                if (iswin()) {
+//                    Toast.makeText(getContext(), "You Win!", Toast.LENGTH_LONG).show();
+                    return;
+                }
+                if (isGameOver()) {
+//                    Toast.makeText(getContext(), "Game Over!", Toast.LENGTH_LONG).show();
+                    return;
+                }
+            }
 
-    //    public void run() {
-//        while (true) {
-//            if(!isPause){
-//                ball.move();
-//                t.resume();
-//            }else{
-//                t.suspend();
-//            }
-//            for (int i = 0; i < m; i++) {
-//                for (int j = 0; j < n; j++) {
-//                    if (blocks[i][j].visible) {
-//                        blocks[i][j].crash(ball);
-//                    }
-//                }
-//            }
-//            pane.peng(ball);
-//            repaint();
-//            try {
-//                t.sleep(speed);
-//            } catch (InterruptedException e) {
-//                // TODO Auto-generated catch block
-//                e.printStackTrace();
-//            }
-//            if(iswin()){
-//
-//                return;
-//            }
-//            if (this.ball.isGameOver()) {
-//                return;
-//            }
-//        }
-//    }
-    public boolean Pause() {
-        this.t.suspend();
-        return true;
+        }
+
+
+    });
+
+    void suspend() {
+        isPause = true;
+    }
+
+    synchronized void resume() {
+        isPause = false;
+        notify();
     }
 
     public void reset() {
-
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                blocks[i][j].visible = true;
+            }
+        }
+        postInvalidate();
     }
 
 }

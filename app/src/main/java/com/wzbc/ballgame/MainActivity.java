@@ -13,48 +13,63 @@ public class MainActivity extends AppCompatActivity {
     Button pause;
     Button newgame;
     MyView myView;
-    Thread t;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         findView();
-        lvldown.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                myView.speed = myView.speed - 2;
-                myView.pane.w = myView.pane.w - 10;
-                myView.pane.a = myView.pane.a + 2;
-            }
-        });
         lvlup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                myView.speed = myView.speed + 2;
-                myView.pane.w = myView.pane.w + 5;
+                if (myView.speed > 2) {
+                    System.out.println("DOWNspeed!!!!!!!!!!!" + myView.speed);
+                    myView.speed = myView.speed - 4;
+                    myView.pane.w = myView.pane.w - 10;
+                    myView.pane.a = myView.pane.a + 2;
+                }
             }
         });
+        lvldown.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (myView.speed < 22) {
+                    System.out.println("UPspeed!!!!!!!!!!!" + myView.speed);
+                    myView.speed = myView.speed + 4;
+                    myView.pane.w = myView.pane.w + 5;
+                }
+            }
+        });
+
         pause.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (!myView.isPause) {
-                    pause.setBackgroundResource(R.drawable.pause);
-                    new Thread(myView.t).suspend();
-                } else {
+                    System.out.println("this !" + myView.isPause);
+                    myView.isPause = true;
                     pause.setBackgroundResource(R.drawable.play);
-                    new Thread(myView.t).resume();
+                } else {
+                    System.out.println("that!:" + myView.isPause);
+                    myView.isPause = false;
+                    pause.setBackgroundResource(R.drawable.pause);
                 }
             }
         });
+
         newgame.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (myView.ball.isGameOver()) {
-                    new Thread(myView.t).start();
-                }
+                System.out.println("GOOOOOOO!;" + myView.isGameOver());
+             if (myView.isGameOver()) {
+                 myView.isPause = false;
+                 new Thread(myView.t).start();
+             }
+                myView.isPause = false;
+                pause.setBackgroundResource(R.drawable.pause);
                 myView.ball.x = myView.ball.a.nextInt(430) % (430 - 40 + 1) + 40;
-                myView.ball.y = 200;
+                myView.ball.y = 1200;
+
                 myView.reset();
             }
         });
@@ -65,6 +80,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
 
     public void findView() {
         myView = (MyView) findViewById(R.id.myView);
