@@ -4,9 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
     android:orientation="vertical"
-    tools:context="com.wzbc.ballgame.MainActivity"
-    android:fitsSystemWindows="true">
+    tools:context="com.wzbc.ballgame.MainActivity">
 
     <RelativeLayout
         android:layout_width="wrap_content"
@@ -44,6 +44,15 @@
             android:layout_marginStart="11dp"
             android:layout_toEndOf="@+id/up"
             android:background="@drawable/down" />
+
+        <Button
+            android:id="@+id/music"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="17dp"
+            android:layout_toEndOf="@+id/down"
+            android:background="@drawable/speak" />
 
         <Button
             android:id="@+id/newgame"

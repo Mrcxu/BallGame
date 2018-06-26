@@ -1,6 +1,7 @@
 package com.wzbc.ballgame;
 
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Handler;
@@ -24,9 +25,11 @@ public class MainActivity extends AppCompatActivity {
     Button help;
     Button pause;
     Button newgame;
+    Button music;
     TextView count;
     MyView myView;
     int i = 0;
+    boolean isPlay = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +37,8 @@ public class MainActivity extends AppCompatActivity {
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_main);
         findView();
+        final Intent it = new Intent(MainActivity.this,MusicServer.class);
+        startService(it);
         initWindow();
        myView.handler = new Handler() {
             public void handleMessage(android.os.Message msg) {
@@ -133,6 +138,21 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        music.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (isPlay==true){
+                    music.setBackgroundResource(R.drawable.speakermute);
+                    stopService(it);
+                    isPlay=false;
+                }else {
+                    music.setBackgroundResource(R.drawable.speak);
+                    startService(it);
+                    isPlay=true;
+                }
+            }
+        });
+
     }
 
     private void initWindow() {//初始化窗口属性，让状态栏和导航栏透明
@@ -147,6 +167,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void findView() {
+        music = (Button) findViewById(R.id.music);
         myView = (MyView) findViewById(R.id.myView);
         lvldown = (Button) findViewById(R.id.down);
         lvlup = (Button) findViewById(R.id.up);
