@@ -5,6 +5,8 @@ package com.wzbc.ballgame;
  */
 
 import android.app.Activity;
+import android.graphics.Point;
+import android.view.Display;
 
 
 public class Globals {
@@ -12,8 +14,11 @@ public class Globals {
     public static int SCREEN_HEIGHT;
 
     public static void init(Activity a) {
-        SCREEN_WIDTH = a.getWindowManager().getDefaultDisplay().getWidth();
-        SCREEN_HEIGHT = a.getWindowManager().getDefaultDisplay().getHeight();
+        Display display = a.getWindowManager().getDefaultDisplay();
+        Point outSize = new Point();
+        display.getSize(outSize);
+        SCREEN_WIDTH = outSize.x;
+        SCREEN_HEIGHT = outSize.y;
     }
 
 }

@@ -5,6 +5,8 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.os.Handler;
+import android.os.Message;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
@@ -15,7 +17,6 @@ import static com.wzbc.ballgame.Globals.SCREEN_WIDTH;
 
 
 public class MyView extends View {
-    //    Thread t = null;11
     int speed = 10;
     Ball ball;
     Pane pane;
@@ -23,12 +24,12 @@ public class MyView extends View {
     int n = 5;
     Block[][] blocks;
     float initX = 500;
-    private float startX = 0;
-    private float nowX = 0;
+    float startX = 0;
+    float nowX = 0;
     Boolean ismove = false;
     Boolean isup;
     Boolean isPause = true;
-
+    Handler handler;
     public MyView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
@@ -58,7 +59,7 @@ public class MyView extends View {
 
             }
         });
-//        t = new Thread();
+
         this.setOnTouchListener(new OnTouchListener() {
 
             @Override
@@ -68,7 +69,6 @@ public class MyView extends View {
                         startX = event.getX();
                         ismove = false;
                         isup = false;
-                        Toast.makeText(getContext(), "点下了！", Toast.LENGTH_LONG).show();
                         System.out.println("1:" + startX);
                         System.out.println("before:::::" + initX);
                         break;
@@ -86,11 +86,11 @@ public class MyView extends View {
                         } else if (nowX - startX + initX < 200) {
                             nowX = 200 - initX + startX;
                         }
-                        System.out.println("nowX::::" + nowX);
+//                        initX = (nowX - startX) + initX;
+                        System.out.println("nowX::::" + initX);
                         break;
                     case MotionEvent.ACTION_UP:
                         isup = true;
-                        Toast.makeText(getContext(), "抬起了！", Toast.LENGTH_LONG).show();
                         if (!ismove) {
                         } else {
                             initX = (nowX - startX) + initX;
@@ -109,7 +109,6 @@ public class MyView extends View {
                         break;
                 }
                 return true;
-                //返回true表明处理方法已经处理该事件
             }
         });
         t.start();
@@ -146,10 +145,9 @@ public class MyView extends View {
             }
         }
         paint.setColor(Color.WHITE);
-        canvas.drawOval(ball.x, ball.y, ball.x + 50, ball.y + 50, paint);  // 小球
+        canvas.drawOval(ball.x - ball.d, ball.y - ball.d, ball.x + ball.d, ball.y + ball.d, paint);  // 小球
         paint.setColor(Color.WHITE);
         canvas.drawRoundRect((nowX - startX) + initX - pane.w, pane.y - pane.h, (nowX - startX) + initX, pane.y, pane.r, pane.r, paint); // 挡板
-
     }
 
     public boolean iswin() {
@@ -162,8 +160,19 @@ public class MyView extends View {
         if (sum == 0) return true;
         else return false;
     }
-    public boolean isGameOver(){
-        if (ball.y > 1550 ){
+
+    public int count() {
+        int count = 0;
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (blocks[i][j].visible == true) count++;
+            }
+        }
+        return 40 - count;
+    }
+
+    public boolean isGameOver() {
+        if (ball.y > 1550) {
             return true;
         }
         return false;
@@ -184,29 +193,32 @@ public class MyView extends View {
                     // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
+                for (int i = 0; i < m; i++) {
+                    for (int j = 0; j < n; j++) {
+                        if (blocks[i][j].visible) {
+                            blocks[i][j].crash(ball);
+                        }
+                    }
+                }
+                pane.peng(ball, MyView.this);
+                postInvalidate();
+                if (count()>=0){
+                    handler.sendEmptyMessageDelayed(0, 50);
+                }
                 if (iswin()) {
-//                    Toast.makeText(getContext(), "You Win!", Toast.LENGTH_LONG).show();
+                    handler.sendEmptyMessageDelayed(1, 50);
                     return;
                 }
                 if (isGameOver()) {
-//                    Toast.makeText(getContext(), "Game Over!", Toast.LENGTH_LONG).show();
+                    handler.sendEmptyMessageDelayed(2, 50);
                     return;
                 }
             }
-
         }
 
 
     });
 
-    void suspend() {
-        isPause = true;
-    }
-
-    synchronized void resume() {
-        isPause = false;
-        notify();
-    }
 
     public void reset() {
         for (int i = 0; i < m; i++) {
@@ -216,5 +228,4 @@ public class MyView extends View {
         }
         postInvalidate();
     }
-
 }
